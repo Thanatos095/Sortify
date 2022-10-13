@@ -2,14 +2,6 @@ import { Component }from 'react'
 import './styles.css'
 import { getRandomInt } from '../../Utility/Random/Random';
 import Animator from '../../Utility/Animator/Animator';
-const get_data = () => {
-
-    const array : Array<number> = [];
-    for (let i = 0; i < 100; i++) {
-        array.push(getRandomInt(1, 50));
-    }
-    return array;
-}
 
 interface _props{
     sort : (v : VisualArray) => Generator<void>,
@@ -30,14 +22,16 @@ export class VisualArray extends Component<_props, _state> {
       this.numSwaps = 0;
       this.numAccesses = 0;
       this.numComparisons = 0;
-      this.state = { data : props.data};
-      this.states = Array(this.state.data.length).fill(0);
+      this.state = { data : props.data };
+      this.states = Array(this.state.data.length).fill(0); /* Denotes which nodes are active */
       this._generator = props.sort(this);
-      this._animator = new Animator(120, (animatorRef : Animator) => {
+      const fps = 120; /* The higher the fps, the higher the speed of the animation */
+      this._animator = new Animator(fps, (animatorRef : Animator) => {
         const next = this._generator!.next();
         if(next.done){
             animatorRef.stop();
-            this.clearStates();     
+            this.clearStates();    
+            console.log(this.getStatistics()); 
         } 
       });
   }    
@@ -83,8 +77,12 @@ export class VisualArray extends Component<_props, _state> {
   length(){
     return this.state.data.length;
   }
+  getStatistics(){
+    return {numAccesses : this.numAccesses, numSwaps : this.numSwaps, numComparisons : this.numComparisons};
+  }
   clearStates(){
-    this.states.forEach((item, i) => this.states[i] = 0);
+    this.states = Array(this.states.length).fill(0);
+    this.forceUpdate(); /* This is a temporary fix to update the state properly. Making the states array a state doesnt work */
   }
   render() {
     return (
