@@ -1,7 +1,6 @@
 import React from 'react';
 import VisualArray from './Components/VisualArray/VisualArray';
-import BubbleSort from './Utility/Sorts/BubbleSort';
-import InsertionSort from './Utility/Sorts/InsertionSort';
+import { BubbleSort, InsertionSort, HeapSort } from './Utility/Sorts';
 import { getRandomInt } from './Utility/Random/Random';
 
 const get_data = () => {
@@ -17,6 +16,7 @@ const get_data = () => {
 function App() {
   return (
     <div className="App">
+      <VisualArray data={get_data()} sort = {HeapSort}/>
       <VisualArray data={get_data()} sort = {InsertionSort}/>
     </div>
   );
