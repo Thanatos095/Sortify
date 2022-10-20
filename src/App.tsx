@@ -22,7 +22,7 @@ const get_sorted_data = () => {
 function App() {
   return (
     <div className="App">
-      <VisualArray data={get_data()} sort = {BubbleSort}/>
+      <VisualArray fps = {60} data={get_data()} sort = {MergeSort}/>
     </div>
   );
 }

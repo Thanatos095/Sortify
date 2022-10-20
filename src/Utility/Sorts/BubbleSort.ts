@@ -10,7 +10,6 @@ export default function* BubbleSort(v : VisualArray){
             }
 
         yield;
-        v.clearStates();
         }
     }
 }

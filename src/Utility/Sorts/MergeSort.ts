@@ -15,7 +15,6 @@ export default function* MergeSort(v : VisualArray){
                 R[i] = v.get(mid + 1 + i);
             }
             yield;
-            v.clearStates();
             let i = 0;
             let j = 0;
             let k = left;
@@ -23,13 +22,11 @@ export default function* MergeSort(v : VisualArray){
                 if (v.lte(L[i], R[j])) {
                     v.set(k, L[i]);
                     yield;
-                    v.clearStates();
                     i++;
                 }
                 else {
                     v.set(k, R[j]);
                     yield;
-                    v.clearStates();
                     j++;
                 }
                 k++;
@@ -38,14 +35,12 @@ export default function* MergeSort(v : VisualArray){
             while (i < n1) {
                 v.set(k, L[i]);
                 yield;
-                v.clearStates();
                 i++;
                 k++;
             }
             while (j < n2) {
                 v.set(k, R[j]);
                 yield;
-                v.clearStates();
                 j++;
                 k++;
             }

@@ -17,7 +17,6 @@ export default function* HeapSort(v : VisualArray){
             if (largest !== i) {
                 v.swap(i, largest);
                 yield;
-                v.clearStates();
                 i = largest;
             }
             else break;
@@ -29,7 +28,6 @@ export default function* HeapSort(v : VisualArray){
     for(let i = v.length() - 1 ; i >= 0 ; i--){
         v.swap(i, 0);
         yield;
-        v.clearStates();
         yield* heapify(i, 0);
     }
 }
