@@ -1,4 +1,4 @@
-import VisualArray from "../../Components/VisualArray/VisualArray";
+import VisualArray from "../Components/VisualArray/VisualArray";
 
 export default function* MergeSort(v : VisualArray){
     function* _merge_sort(left : number, right : number) : Generator<void>{

@@ -1,4 +1,4 @@
-import VisualArray from "../../Components/VisualArray/VisualArray";
+import VisualArray from "../Components/VisualArray/VisualArray";
 export default function* InsertionSort(v : VisualArray){
     for (let i = 1; i < v.length(); i++) 
     {  

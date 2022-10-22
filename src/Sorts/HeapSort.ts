@@ -1,4 +1,4 @@
-import VisualArray from "../../Components/VisualArray/VisualArray";
+import VisualArray from "../Components/VisualArray/VisualArray";
 export default function* HeapSort(v : VisualArray){
     function* heapify(size : number, i : number){
         while(true){
