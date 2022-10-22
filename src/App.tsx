@@ -4,10 +4,9 @@ import { BubbleSort, InsertionSort, HeapSort, MergeSort } from './Sorts';
 import { getRandomInt } from './Utility/Random/Random';
 
 const get_data = (length : number) => {
-
     const array : Array<number> = [];
     for (let i = 0; i < length; i++) {
-        array.push(getRandomInt(1, 50));
+        array.push(getRandomInt(-1000, 1000));
     }
     return array;
 }
@@ -22,7 +21,7 @@ const get_sorted_data = () => {
 function App() {
   return (
     <div className="App">
-      <VisualArray fps = {60} data={get_data(50)} sort = {MergeSort}/>
+      <VisualArray fps = {60} data={get_data(100)} sort = {HeapSort}/>
     </div>
   );
 }
