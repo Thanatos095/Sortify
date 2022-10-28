@@ -23,13 +23,11 @@ class Animator {
       {
         this._playing = true;
         let then = performance.now();
-        const interval = 1000 / this._fps;
         const tolerance = 0.1;
-  
         const _animateLoop = (now : number) => {
           this._requestID = requestAnimationFrame(_animateLoop);
           const delta = now - then;
-  
+          const interval = 1000 / this._fps;
           if (delta >= interval - tolerance) {
             then = now - (delta % interval);
             this._animate!(this);
