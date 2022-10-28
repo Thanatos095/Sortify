@@ -54,7 +54,11 @@ export class VisualArray extends Component<_props, {}> {
       });
   }
   setData(data : Array<number>){
-    this.data = data;
+    this.data = [...data];
+    this.#adjustLength();
+    this.forceUpdate();
+    this.forceUpdate();
+    this.forceUpdate();
   }
   setSort( sorter : (v : VisualArray) => Generator<void>){
     this._sort= sorter;
@@ -94,6 +98,7 @@ export class VisualArray extends Component<_props, {}> {
       this.data[index] = value;
   }
   swap(i : number, j : number){
+
       this.numSwaps++;
       this.numAccesses += 4; /* Two reads, Two writes */
       [this.data[i], this.data[j]]=[this.data[j], this.data[i]];
@@ -128,13 +133,13 @@ export class VisualArray extends Component<_props, {}> {
     this.states = Array(this.states.length).fill(State.normal);
   }
   #adjustLength(){
-      const ELEMENT_MIN_SPACE_TAKEN = 5 + 3.2; /* Min width is 5pixels and the left and right margin is 3.2 pixels in total */
-      this.maxNumberOfElements = Math.floor(this._containerRef.current!.offsetWidth / ELEMENT_MIN_SPACE_TAKEN);
-      const new_length = Math.min(this.data.length, this.maxNumberOfElements);
-      this.data = this.data.slice(0, new_length);
+      const ELEMENT_MAX_SPACE_TAKEN = 15 + 3.2; /* Min width is 15pixels and the left and right margin is 3.2 pixels in total */
+      this.maxNumberOfElements = Math.floor(this._containerRef.current!.offsetWidth / ELEMENT_MAX_SPACE_TAKEN);
+      const new_length = Math.min(this.data.length, this.maxNumberOfElements) + 1;
+      this.data = [...this.data.slice(0, new_length)];
       this.max = Math.max(...this.data);
       this.min = Math.min(...this.data);
-      this.states = this.states.slice(0, new_length);
+      this.states = [...this.states.slice(0, new_length)];
   }
   /*[0, this._containerRef.current!.offsetHeight]; Output Range
   [this.min, this.max]; Input Range
