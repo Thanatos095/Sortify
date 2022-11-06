@@ -67,7 +67,9 @@ function App() {
     setData : ( data : Array<number> ) => arrayRef.current?.setData(data),
     play : () => arrayRef.current?.play(),
     pause : () => arrayRef.current?.pause(),
-    setFPS : (value : number) => arrayRef.current?.setFPS(value)
+    setFPS : (value : number) => arrayRef.current?.setFPS(value),
+    getStatistics : () => arrayRef.current?.getStatistics(),
+    onDone : (fun : Function) => arrayRef.current?.onDone(fun)
   }
 
   return (
@@ -82,6 +84,8 @@ function App() {
           play = {methods.play}
           pause = {methods.pause}
           setData = {methods.setData}
+          onDone = {methods.onDone}
+          getStatistics = {methods.getStatistics}
         />
 
         <VisualArray 

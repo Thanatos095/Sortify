@@ -21,7 +21,9 @@ import {
     FormLabel,
     RadioGroup,
     Radio,
-    FormControlLabel
+    FormControlLabel,
+    Dialog,
+    DialogTitle
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DataObjectIcon from '@mui/icons-material/DataObject';
@@ -35,7 +37,9 @@ interface NavBar_props {
     setFPS: (value: number) => void
     play: () => void,
     pause: () => void,
-    setData: (data: Array<number>) => void
+    setData: (data: Array<number>) => void,
+    getStatistics : () => any
+    onDone : (fun : Function) => void
 }
 
 
@@ -44,6 +48,7 @@ export default function NavBar(props: NavBar_props) {
     const [playing, setplaying] = React.useState(false);
     const [fps, setfps] = React.useState(60);
     const [open, setopen] = React.useState(false);
+    const [openDialog, setopenDialog] = React.useState(false);
     const [popperAnchor, setpopperAnchor] = React.useState<HTMLElement>();
     const [formInput, setformInput] = React.useState({
         array : "",
@@ -124,15 +129,48 @@ export default function NavBar(props: NavBar_props) {
         setpopperAnchor(event.currentTarget);
         setopen(!open);
     };
-
+    React.useEffect(() => {
+        props.onDone(() => {
+            setplaying(false);
+            setopenDialog(true);
+        });
+    }, []);
     const btn = {
         sx: {
             color: 'white',
             backgroundColor: 'primary.light'
         }
     }
+    const getStatisticsDialogBox = () => 
+        <Dialog open = {openDialog} onClose={() => setopenDialog(false)}>
+            <DialogTitle textAlign='center'>Details</DialogTitle>
+            <Box paddingX={4} paddingBottom={3}>
+                <Box marginY={1}>
+                    <Typography variant="body1" color="initial" display='inline'>Sorting algorithm : </Typography>
+                    <Typography variant="body2" color="initial" display='inline'>{sort}</Typography>
+                </Box>
+                <Box marginY={1}>
+                    <Typography variant="body1" color="initial" display='inline'>Number of accesses : </Typography>
+                    <Typography variant="body2" color="initial" display='inline'>{props.getStatistics().numAccesses}</Typography>
+                </Box>
+                <Box marginY={1}>
+                    <Typography variant="body1" color="initial" display='inline'>Number of swaps : </Typography>
+                    <Typography variant="body2" color="initial" display='inline'>{props.getStatistics().numSwaps}</Typography>
+                </Box>
+                <Box marginY={1}>
+                    <Typography variant="body1" color="initial" display='inline'>Number of comparisons : </Typography>
+                    <Typography variant="body2" color="initial" display='inline'>{props.getStatistics().numComparisons}</Typography>
+                </Box>
+                <Box marginY={1}>
+                    <Typography variant="body1" color="initial" display='inline'>Time taken : </Typography>
+                    <Typography variant="body2" color="initial" display='inline'>{Math.round(props.getStatistics().timeTaken) + "ms"}</Typography>
+                </Box>
+            </Box>
+        </Dialog>     
+
     return (
         <Box sx={{ flexGrow: 1 }}>
+            {props.getStatistics() && getStatisticsDialogBox()}
             <AppBar color='primary' position="static">
                 <Toolbar>
                     <Box flexGrow={1} display='flex' flexDirection='row' alignItems='center' >

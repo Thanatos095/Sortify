@@ -22,11 +22,13 @@ export class VisualArray extends Component<_props, {}> {
   min : number;
   max : number;
   maxNumberOfElements : number;
+  timeTaken : number;
   _sort : ( v : VisualArray ) => Generator<void>;
   _generator : Generator<void> | null;
   _animator : Animator;
-  _containerRef : React.RefObject<HTMLDivElement>
-
+  _containerRef : React.RefObject<HTMLDivElement>;
+  _onDoneMethod : Function | null; /* can be used to call a function when visualization is done. */
+  _isDone : boolean
   constructor(props : _props){
       super(props);
       this.numSwaps = 0;
@@ -36,18 +38,28 @@ export class VisualArray extends Component<_props, {}> {
       this.min = 0;
       this.max = 0;
       this.maxNumberOfElements = 0;
+      this.timeTaken = 0;
       this.states = Array(this.props.data.length).fill(State.normal); /* Denotes which nodes are active */
       this._containerRef = React.createRef(); /* Used to get the height and width of the container div */
       this._sort = props.sort;
       this._generator = null;
+      this._onDoneMethod = null;
+      this._isDone = true;
       this._animator = new Animator(props.fps, (animatorRef : Animator) => {
         const next = this._generator!.next(); /* Get next fram generator*/
         if(next.done){ /* If all frames have been taken then stop the animation */
             this._generator = null;
             animatorRef.stop();
-            console.log(this.getStatistics()); 
+            this.timeTaken = performance.now() - this.timeTaken;
+            this.forceUpdate(() => {
+              this.#clearStates();
+              if(this._onDoneMethod){
+                this._onDoneMethod();
+                this._isDone = true;
+              } 
+            })
         }
-        this.forceUpdate(() => this.#clearStates()); 
+        else this.forceUpdate(() => this.#clearStates()); 
         /* Rerender the component and after rerender(synchronous), clear the states array 
         animation loop :  Update => Draw => clear => next_frame => update => Draw => clear ......
         */
@@ -55,9 +67,8 @@ export class VisualArray extends Component<_props, {}> {
   }
   setData(data : Array<number>){
     this.data = [...data];
+    this.#reInit();
     this.#adjustLength();
-    this.forceUpdate();
-    this.forceUpdate();
     this.forceUpdate();
   }
   setSort( sorter : (v : VisualArray) => Generator<void>){
@@ -65,10 +76,25 @@ export class VisualArray extends Component<_props, {}> {
     this._generator = this._sort(this);
   }
   setFPS(value : number){
-    console.log(value);
     this._animator.setFPS(value);
   }
+  onDone(fun : Function){
+    this._onDoneMethod = fun;
+  }
+  #reInit(){
+    this.pause();
+    this._generator = this._sort(this);
+    this._isDone = true;
+    this._onDoneMethod && this._onDoneMethod();
+  }
   play = () => {
+    if(this._isDone){
+      this.timeTaken = performance.now();
+      this.numAccesses = 0;
+      this.numSwaps = 0;
+      this.numComparisons = 0;
+      this._isDone = false;
+    }
     if(this._generator === null) this._generator = this._sort(this);
     this._animator.start();
   }
@@ -98,7 +124,6 @@ export class VisualArray extends Component<_props, {}> {
       this.data[index] = value;
   }
   swap(i : number, j : number){
-
       this.numSwaps++;
       this.numAccesses += 4; /* Two reads, Two writes */
       [this.data[i], this.data[j]]=[this.data[j], this.data[i]];
@@ -127,7 +152,12 @@ export class VisualArray extends Component<_props, {}> {
     return this.data.length;
   }
   getStatistics(){
-    return {numAccesses : this.numAccesses, numSwaps : this.numSwaps, numComparisons : this.numComparisons};
+    return {
+        numAccesses : this.numAccesses,
+        numSwaps : this.numSwaps,
+        numComparisons : this.numComparisons,
+        timeTaken : this.timeTaken
+      };
   }
   #clearStates(){
     this.states = Array(this.states.length).fill(State.normal);
@@ -150,8 +180,12 @@ export class VisualArray extends Component<_props, {}> {
   output = output_start + slope * (input - input_start)*/
   #getBarHeight(value : number){
     if(this._containerRef.current){ /* In the first render, the container reference is null */
-      const slope = this._containerRef.current.offsetHeight / (this.max - this.min);
-      return slope * Math.round(value - this.min);
+      const computedStyles = getComputedStyle(this._containerRef.current);
+      const height = parseFloat(computedStyles.height) - parseFloat(computedStyles.paddingTop) - parseFloat(computedStyles.paddingBottom)
+      /* Subtracting 1 from the minimum so the cell with minimum value does not have height 0 */
+      const slope = height / (this.max - (this.min - 1));
+      /* Cell min height is 1px*/
+      return Math.max(Math.ceil(slope * Math.round(value - (this.min - 1))), 1);
     }
     else return 0;
   }
