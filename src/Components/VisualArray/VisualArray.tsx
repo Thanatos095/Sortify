@@ -22,7 +22,6 @@ export class VisualArray extends Component<_props, {}> {
   min : number;
   max : number;
   maxNumberOfElements : number;
-  timeTaken : number;
   _sort : ( v : VisualArray ) => Generator<void>;
   _generator : Generator<void> | null;
   _animator : Animator;
@@ -38,7 +37,6 @@ export class VisualArray extends Component<_props, {}> {
       this.min = 0;
       this.max = 0;
       this.maxNumberOfElements = 0;
-      this.timeTaken = 0;
       this.states = Array(this.props.data.length).fill(State.normal); /* Denotes which nodes are active */
       this._containerRef = React.createRef(); /* Used to get the height and width of the container div */
       this._sort = props.sort;
@@ -50,7 +48,6 @@ export class VisualArray extends Component<_props, {}> {
         if(next.done){ /* If all frames have been taken then stop the animation */
             this._generator = null;
             animatorRef.stop();
-            this.timeTaken = performance.now() - this.timeTaken;
             this.forceUpdate(() => {
               this.#clearStates();
               if(this._onDoneMethod){
@@ -84,12 +81,11 @@ export class VisualArray extends Component<_props, {}> {
   #reInit(){
     this.pause();
     this._generator = this._sort(this);
-    this._isDone = true;
-    this._onDoneMethod && this._onDoneMethod();
+    // this._isDone = true;
+    // this._onDoneMethod && this._onDoneMethod();
   }
   play = () => {
     if(this._isDone){
-      this.timeTaken = performance.now();
       this.numAccesses = 0;
       this.numSwaps = 0;
       this.numComparisons = 0;
@@ -114,16 +110,19 @@ export class VisualArray extends Component<_props, {}> {
       this.forceUpdate();
   }
   get(index : number){
+      if(index < 0 || index >= this.data.length) alert(index.toString() + " is OUT_OF_BOUNDS");
       this.numAccesses++;
       this.states[index] = State.active;
       return this.data[index];
   }
   set(index : number, value : number){
+      if(index < 0 || index >= this.data.length) alert(index.toString() + " is OUT_OF_BOUNDS");
       this.numAccesses++;
       this.states[index] = State.active;
       this.data[index] = value;
   }
   swap(i : number, j : number){
+      if(i < 0 || i >= this.data.length) alert("[" + i.toString() +", " + j.toString() + "]" + " is OUT_OF_BOUNDS");
       this.numSwaps++;
       this.numAccesses += 4; /* Two reads, Two writes */
       [this.data[i], this.data[j]]=[this.data[j], this.data[i]];
@@ -156,8 +155,13 @@ export class VisualArray extends Component<_props, {}> {
         numAccesses : this.numAccesses,
         numSwaps : this.numSwaps,
         numComparisons : this.numComparisons,
-        timeTaken : this.timeTaken
       };
+  }
+  getMax(){
+    return this.max;
+  }
+  getMin(){
+    return this.min;
   }
   #clearStates(){
     this.states = Array(this.states.length).fill(State.normal);

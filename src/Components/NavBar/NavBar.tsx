@@ -161,10 +161,6 @@ export default function NavBar(props: NavBar_props) {
                     <Typography variant="body1" color="initial" display='inline'>Number of comparisons : </Typography>
                     <Typography variant="body2" color="initial" display='inline'>{props.getStatistics().numComparisons}</Typography>
                 </Box>
-                <Box marginY={1}>
-                    <Typography variant="body1" color="initial" display='inline'>Time taken : </Typography>
-                    <Typography variant="body2" color="initial" display='inline'>{Math.round(props.getStatistics().timeTaken) + "ms"}</Typography>
-                </Box>
             </Box>
         </Dialog>     
 

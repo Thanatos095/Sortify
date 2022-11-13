@@ -8,7 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 const get_data = (length : number) => {
     const array : Array<number> = [];
     for (let i = 0; i < length; i++) {
-        array.push(getRandomInt(-1000, 1000));
+        array.push(getRandomInt(0, 1000));
     }
     return array;
 }
@@ -45,7 +45,13 @@ const sortMappings = {
   "Bubble Sort" : Sorts.BubbleSort,
   "Insertion Sort" : Sorts.InsertionSort,
   "Heap Sort" : Sorts.HeapSort,
-  "Merge Sort" : Sorts.MergeSort
+  "Merge Sort" : Sorts.MergeSort,
+  "Radix Sort" : Sorts.RadixSort,
+  "Quick Sort" : Sorts.QuickSort,
+  "Counting Sort" : Sorts.CountingSort,
+  "Bucket Sort" : Sorts.BucketSort,
+  "QuickInsert Sort" : Sorts.QuickInsertSort,
+  "CountingAdaptation" : Sorts.CountSortAdaptation
 };
 const theme = createTheme({
   palette : {

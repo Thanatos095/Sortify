@@ -5,7 +5,7 @@ function getRandomInt(min : number, max : number) {
 }
 
 function getUniformNumber(min : number, max : number){
-    return Math.random() * (max - min) + min;
+    return Math.round(Math.random() * (max - min) + min);
 }
 function getNormalNumber(min : number, max : number){
     let u = 0, v = 0;
@@ -19,7 +19,7 @@ function getNormalNumber(min : number, max : number){
         num *= max - min // Stretch to fill range
         num += min // offset to min
     }
-  return num
+  return Math.round(num);
 }
 
 const getUniformRange = (min : number, max : number, length : number) => Array.from({ length : length } , item => getUniformNumber(min, max))
