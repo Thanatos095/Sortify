@@ -1,9 +1,12 @@
 import VisualArray from "../Components/VisualArray/VisualArray";
 export default function* CountSortAdaptation(v : VisualArray){
+    
     if(!v.data.every(item => item >= 0)){
         alert("Counting sort can only sort non negative numbers.");
         return;
     }
+    
+    /* Calculate the cumulative frequency like in counting sort */
     const max = v.getMax();
     const frequencies = Array.from({length : max + 1}, item => 0); /*Create array of length max + 1 with 0 filled */
     for (let i = 0; i < v.length(); i++) {
@@ -15,6 +18,7 @@ export default function* CountSortAdaptation(v : VisualArray){
         frequencies[i] += frequencies[i - 1];
     }
     
+    /* Use the cumulative frequencies to find frequency of numbers in a range. */
     while(true){
         const input = prompt("Enter a range(space separated): ");
         if(input === null) break;

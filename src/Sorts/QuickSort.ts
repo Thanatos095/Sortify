@@ -6,7 +6,7 @@ export default function* QuickSort(v : VisualArray){
         let i = low - 1;
         for (let j = low; j < high ; j++) {
             // If current element is smaller than the pivot
-            if (v.get(j) < pivot) {
+            if (v.lt(v.get(j), pivot)) {
                 i++; // increment index of smaller element
                 v.swap(i, j);
             }

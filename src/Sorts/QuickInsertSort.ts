@@ -6,7 +6,7 @@ export default function* QuickInsertSort(v : VisualArray){
             const key = v.get(i);
             yield;
             let j = i;
-            while(j > low && v.get(j - 1) > key){
+            while(j > low && v.gt(v.get(j - 1), key)){
                 v.set(j, v.get(j - 1));
                 j--;
             }
@@ -21,7 +21,7 @@ export default function* QuickInsertSort(v : VisualArray){
         yield
         let j = low;
         for(let i = low; i < high ; i++){
-            if(v.get(i) < pivot){
+            if(v.lt(v.get(i), pivot)){
                 v.swap(i, j);
                 j++;
             }

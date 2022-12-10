@@ -1,6 +1,7 @@
 {
   "name": "sort_visualizer",
   "version": "0.1.0",
+  "homepage": "https://thanatos095.github.io/sort-visualizer/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.4",
@@ -47,6 +48,7 @@
     ]
   },
   "devDependencies": {
-    "@types/animejs": "^3.1.5"
+    "@types/animejs": "^3.1.5",
+    "gh-pages": "^4.0.0"
   }
 }
