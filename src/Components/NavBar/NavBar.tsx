@@ -30,16 +30,9 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { random } from 'animejs';
 interface NavBar_props {
     sortMappings: { [index: string]: (v: VisualArray) => Generator<void> },
-    setSort: (sorter: (v: VisualArray) => Generator<void>) => void
-    setFPS: (value: number) => void
-    play: () => void,
-    pause: () => void,
-    setData: (data: Array<number>) => void,
-    getStatistics : () => any
-    onDone : (fun : Function) => void
+    visualArray : React.RefObject<VisualArray>
 }
 
 
@@ -65,7 +58,7 @@ export default function NavBar(props: NavBar_props) {
                 const list = new TextDecoder('utf-8').decode(buffer).split(',').map(Number);
                 if(!list.some(item => isNaN(item)))
                 {
-                    props.setData(list);
+                    props.visualArray.current?.setData(list);
                 }
                 else{
                     alert("Invalid input!");
@@ -77,14 +70,14 @@ export default function NavBar(props: NavBar_props) {
         if(!list.some(item => isNaN(item)))
         {
 
-            props.setData(list);
+            props.visualArray.current?.setData(list);
         }
         else{
             alert("Invalid input!");
         }
     }
     const handleRandom = () => {
-        if(formInput.length === "" || formInput.min === "" || formInput.max ==  ""){
+        if(formInput.length === "" || formInput.min === "" || formInput.max ===  ""){
             alert('Empty Input');
             return;
         }
@@ -97,10 +90,10 @@ export default function NavBar(props: NavBar_props) {
             return;
         }
         if(radioInput === 'normal'){
-            props.setData(getNormalRange(min, max, length));
+            props.visualArray.current?.setData(getNormalRange(min, max, length));
         }
         else{
-            props.setData(getUniformRange(min, max, length));
+            props.visualArray.current?.setData(getUniformRange(min, max, length));
         }
     }
     const handleTextInput = (event : React.ChangeEvent<HTMLInputElement>) => {
@@ -111,18 +104,18 @@ export default function NavBar(props: NavBar_props) {
     }
     const handleSelect = (event: SelectChangeEvent) => {
         setsort(event.target.value as string);
-        props.setSort(props.sortMappings[event.target.value]);
+        props.visualArray.current?.setSort(props.sortMappings[event.target.value]);
     };
 
     const handlePlaying = () => {
-        if (playing) props.pause();
-        else props.play();
+        if (playing) props.visualArray.current?.pause();
+        else props.visualArray.current?.play();
         setplaying(!playing);
     }
 
     const handleSlider = (event: Event, newValue: number | number[]) => {
         setfps(newValue as number);
-        props.setFPS(newValue as number);
+        props.visualArray.current?.setFPS(newValue as number);
     };
 
     const handlePopperOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -130,7 +123,7 @@ export default function NavBar(props: NavBar_props) {
         setopen(!open);
     };
     React.useEffect(() => {
-        props.onDone(() => {
+        props.visualArray.current?.onDone(() => {
             setplaying(false);
             setopenDialog(true);
         });
@@ -151,22 +144,22 @@ export default function NavBar(props: NavBar_props) {
                 </Box>
                 <Box marginY={1}>
                     <Typography variant="body1" color="initial" display='inline'>Number of accesses : </Typography>
-                    <Typography variant="body2" color="initial" display='inline'>{props.getStatistics().numAccesses}</Typography>
+                    <Typography variant="body2" color="initial" display='inline'>{props.visualArray.current?.getStatistics().numAccesses}</Typography>
                 </Box>
                 <Box marginY={1}>
                     <Typography variant="body1" color="initial" display='inline'>Number of swaps : </Typography>
-                    <Typography variant="body2" color="initial" display='inline'>{props.getStatistics().numSwaps}</Typography>
+                    <Typography variant="body2" color="initial" display='inline'>{props.visualArray.current?.getStatistics().numSwaps}</Typography>
                 </Box>
                 <Box marginY={1}>
                     <Typography variant="body1" color="initial" display='inline'>Number of comparisons : </Typography>
-                    <Typography variant="body2" color="initial" display='inline'>{props.getStatistics().numComparisons}</Typography>
+                    <Typography variant="body2" color="initial" display='inline'>{props.visualArray.current?.getStatistics().numComparisons}</Typography>
                 </Box>
             </Box>
         </Dialog>     
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            {props.getStatistics() && getStatisticsDialogBox()}
+            {props.visualArray.current?.getStatistics() && getStatisticsDialogBox()}
             <AppBar color='primary' position="static">
                 <Toolbar>
                     <Box flexGrow={1} display='flex' flexDirection='row' alignItems='center' >

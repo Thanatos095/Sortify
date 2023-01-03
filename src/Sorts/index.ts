@@ -7,4 +7,3 @@ export { default as RadixSort } from "./RadixSort";
 export { default as CountingSort } from "./CountingSort";
 export { default as BucketSort } from "./BucketSort";
 export { default as QuickInsertSort } from "./QuickInsertSort";
-export { default as CountSortAdaptation} from "./CountSortAdaptation";

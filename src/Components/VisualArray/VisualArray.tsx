@@ -1,7 +1,7 @@
 import React, { Component }from 'react'
 import './styles.css'
-import { getRandomInt } from '../../Utility/Random/Random';
 import Animator from '../../Utility/Animator/Animator';
+
 interface _props{
     sort : (v : VisualArray) => Generator<void>,
     data : Array<number>,
@@ -122,7 +122,7 @@ export class VisualArray extends Component<_props, {}> {
       this.data[index] = value;
   }
   swap(i : number, j : number){
-      if(i < 0 || i >= this.data.length) alert("[" + i.toString() +", " + j.toString() + "]" + " is OUT_OF_BOUNDS");
+      if(i < 0 || i >= this.data.length) alert("[" + i.toString() +", " + j.toString() + "] is OUT_OF_BOUNDS");
       this.numSwaps++;
       this.numAccesses += 4; /* Two reads, Two writes */
       [this.data[i], this.data[j]]=[this.data[j], this.data[i]];
