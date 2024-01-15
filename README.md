@@ -1,5 +1,5 @@
 # Sortify
-This project is a visualization tool for different sorting algorithms using React and TypeScript. See it live [here](https://thanatos095.github.io/Sortify/).
+This project is a visualization tool for different sorting algorithms using React and TypeScript. See it live [here](https://mahadhameed095.github.io/Sortify/).
 
 ## Folder structure
 The project has the following folder structure:
